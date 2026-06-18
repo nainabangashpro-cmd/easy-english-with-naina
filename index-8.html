@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Easy English with Naina</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    min-height: 100vh;
+    padding: 16px;
+    color: #333;
+  }
+
+  header {
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+    padding: 20px 10px;
+  }
+
+  header h1 {
+    font-size: 2rem;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+    margin-bottom: 6px;
+  }
+
+  header p {
+    font-size: 1rem;
+    opacity: 0.95;
+  }
+
+  .nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+
+  .nav button {
+    background: rgba(255,255,255,0.9);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 0.95rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: all 0.25s ease;
+    color: #5b3a8e;
+  }
+
+  .nav button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+  }
+
+  .nav button.active {
+    background: linear-gradient(135deg, #ff6a88, #ff9966);
+    color: white;
+  }
+
+  .section {
+    display: none;
+    max-width: 760px;
+    margin: 0 auto;
+    animation: fadeIn 0.4s ease;
+  }
+
+  .section.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card {
+    background: white;
+    border-radius: 18px;
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+
+  .card h2 {
+    color: #5b3a8e;
+    margin-bottom: 14px;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+
+  textarea, input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: 2px solid #e0d6f5;
+    font-size: 1rem;
+    resize: vertical;
+    font-family: inherit;
+  }
+
+  textarea:focus, input[type="text"]:focus {
+    outline: none;
+    border-color: #ff6a88;
+  }
+
+  /* Parts of Speech */
+  .pos-card {
+    background: linear-gradient(135deg, #ffecd2, #fcb69f);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+
+  .pos-card h3 {
+    color: #a13d2b;
+    margin-bottom: 6px;
+    font-size: 1.1rem;
+  }
+
+  .pos-card p { margin-bottom: 4px; font-size: 0.95rem; }
+  .pos-card .example { font-style: italic; color: #5b3a8e; }
+
+  /* Tenses */
+  .tense-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 0.9rem;
+  }
+
+  .tense-table th, .tense-table td {
+    border: 1px solid #e0d6f5;
+    padding: 8px;
+    text-align: left;
+  }
+
+  .tense-table th {
+    background: #5b3a8e;
+    color: white;
+  }
+
+  .tense-table tr:nth-child(even) { background: #f7f4ff; }
+
+  .tense-group {
+    margin-bottom: 22px;
+  }
+
+  .tense-group h3 {
+    color: #185a9d;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+  }
+
+  /* Quiz */
+  .quiz-question {
+    margin-bottom: 18px;
+    padding: 14px;
+    background: #f7f4ff;
+    border-radius: 12px;
+  }
+
+  .quiz-question p.qtext {
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .option-btn {
+    background: white;
+    border: 2px solid #e0d6f5;
+    padding: 10px 14px;
+    border-radius: 10px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+  }
+
+  .option-btn:hover { border-color: #ff6a88; }
+
+  .option-btn.correct {
+    background: #d4f7dc;
+    border-color: #2ecc71;
+    font-weight: bold;
+  }
+
+  .option-btn.wrong {
+    background: #fde0e0;
+    border-color: #e74c3c;
+  }
+
+  .quiz-score {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #5b3a8e;
+    margin-top: 14px;
+  }
+
+  .check-btn {
+    display: block;
+    margin: 16px auto 0;
+    background: linear-gradient(135deg, #ff6a88, #ff9966);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  footer {
+    text-align: center;
+    color: white;
+    padding: 20px 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📘 Easy English with Naina</h1>
+  <p>Learn • Practice — all in one place ✨</p>
+</header>
+
+<div class="nav">
+  <button class="nav-btn active" data-target="pos">🧩 Parts of Speech</button>
+  <button class="nav-btn" data-target="tenses">⏳ Tenses</button>
+</div>
+
+<!-- PARTS OF SPEECH SECTION -->
+<section class="section active" id="pos">
+  <div class="card">
+    <h2>🧩 Parts of Speech</h2>
+    <div id="posList"></div>
+  </div>
+  <div class="card">
+    <h2>📝 Quiz Time — Parts of Speech</h2>
+    <div id="posQuiz"></div>
+    <div class="quiz-score" id="posScore"></div>
+  </div>
+</section>
+
+<!-- TENSES SECTION -->
+<section class="section" id="tenses">
+  <div class="card">
+    <h2>⏳ Tenses Chart</h2>
+    <div id="tensesList"></div>
+  </div>
+  <div class="card">
+    <h2>📝 Quiz Time — Tenses</h2>
+    <div id="tenseQuiz"></div>
+    <div class="quiz-score" id="tenseScore"></div>
+  </div>
+</section>
+
+<footer>Made with 💜 by Naina — Easy English with Naina © 2026</footer>
+
+<script>
+/* ---------- NAVIGATION ---------- */
+const navBtns = document.querySelectorAll('.nav-btn');
+const sections = document.querySelectorAll('.section');
+
+navBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    navBtns.forEach(b => b.classList.remove('active'));
+    sections.forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.target).classList.add('active');
+  });
+});
+
+/* ---------- PARTS OF SPEECH ---------- */
+const posData = [
+  { name: "Noun (اسم)", def: "A word that names a person, place, thing, or idea.", example: "teacher, school, happiness" },
+  { name: "Pronoun (ضمیر)", def: "A word used instead of a noun.", example: "he, she, it, they" },
+  { name: "Verb (فعل)", def: "A word that shows an action or state.", example: "run, eat, is, become" },
+  { name: "Adjective (صفت)", def: "A word that describes a noun.", example: "beautiful, tall, happy" },
+  { name: "Adverb (متعلق فعل)", def: "A word that describes a verb, adjective, or another adverb.", example: "quickly, very, well" },
+  { name: "Preposition (حرف جار)", def: "A word that shows the relation of a noun/pronoun to another word.", example: "in, on, under, with" },
+  { name: "Conjunction (حرف ربط)", def: "A word that joins words or sentences.", example: "and, but, because" },
+  { name: "Interjection (فجائیہ)", def: "A word that expresses sudden feeling.", example: "Wow!, Oh!, Alas!" }
+];
+
+const posListEl = document.getElementById('posList');
+posData.forEach(p => {
+  const div = document.createElement('div');
+  div.className = 'pos-card';
+  div.innerHTML = `<h3>${p.name}</h3><p>${p.def}</p><p class="example">Example: ${p.example}</p>`;
+  posListEl.appendChild(div);
+});
+
+const posQuizLevels = [
+  // Level 1 - Easy (pool of questions, 3 picked randomly each time)
+  [
+    { q: "Which word is a Noun?", options: ["Run", "Teacher", "Quickly", "In"], answer: 1 },
+    { q: "Which word is a Verb?", options: ["Beautiful", "Eat", "Table", "Very"], answer: 1 },
+    { q: "Which word is an Adjective?", options: ["Happy", "Run", "And", "On"], answer: 0 },
+    { q: "Which word is a Noun?", options: ["Quickly", "Book", "Run", "Under"], answer: 1 },
+    { q: "Which word is a Verb?", options: ["Jump", "Tall", "City", "Slowly"], answer: 0 },
+    { q: "Which word is an Adjective?", options: ["Sing", "Beautiful", "Quickly", "But"], answer: 1 },
+    { q: "Which word is a Noun?", options: ["Friendly", "Garden", "Walk", "Very"], answer: 1 },
+    { q: "Which word is a Verb?", options: ["Write", "Bright", "Window", "Soon"], answer: 0 }
+  ],
+  // Level 2 - Medium
+  [
+    { q: "Which word is a Pronoun?", options: ["School", "She", "Quickly", "Under"], answer: 1 },
+    { q: "Which word is a Preposition?", options: ["Wow", "Under", "Happy", "Run"], answer: 1 },
+    { q: "Which word is a Conjunction?", options: ["But", "Table", "Tall", "Eat"], answer: 0 },
+    { q: "Which word is a Pronoun?", options: ["Teacher", "They", "Run", "Slowly"], answer: 1 },
+    { q: "Which word is a Preposition?", options: ["Happy", "On", "Sing", "Quickly"], answer: 1 },
+    { q: "Which word is a Conjunction?", options: ["Because", "Garden", "Eat", "Soft"], answer: 0 },
+    { q: "Which word is a Pronoun?", options: ["Him", "Book", "Open", "Yellow"], answer: 0 },
+    { q: "Which word is a Preposition?", options: ["With", "Happy", "Run", "Loudly"], answer: 0 }
+  ],
+  // Level 3 - Hard
+  [
+    { q: "In 'She sings beautifully', which word is the Adverb?", options: ["She", "Sings", "Beautifully", "None"], answer: 2 },
+    { q: "In 'Wow, that is amazing!', which word is the Interjection?", options: ["Wow", "That", "Is", "Amazing"], answer: 0 },
+    { q: "In 'The cat sat under the table', which word is the Preposition?", options: ["Cat", "Sat", "Under", "Table"], answer: 2 },
+    { q: "In 'He runs very fast', which word is the Adverb modifying another adverb?", options: ["He", "Runs", "Very", "Fast"], answer: 2 },
+    { q: "In 'Ouch, that hurts!', which word is the Interjection?", options: ["Ouch", "That", "Hurts", "None"], answer: 0 },
+    { q: "In 'She walked into the room', which word is the Preposition?", options: ["She", "Walked", "Into", "Room"], answer: 2 },
+    { q: "In 'They arrived early today', which word is the Adverb?", options: ["They", "Arrived", "Early", "Today"], answer: 2 },
+    { q: "In 'I and my friend went out', which word is the Conjunction?", options: ["I", "And", "Friend", "Went"], answer: 1 }
+  ]
+];
+
+/* ---------- TENSES ---------- */
+const tensesData = [
+  {
+    title: "Present Tense",
+    rows: [
+      ["Simple Present", "I eat rice.", "Subject + V1 (+s/es)"],
+      ["Present Continuous", "I am eating rice.", "Subject + am/is/are + V-ing"],
+      ["Present Perfect", "I have eaten rice.", "Subject + have/has + V3"],
+      ["Present Perfect Continuous", "I have been eating rice.", "Subject + have/has been + V-ing"]
+    ]
+  },
+  {
+    title: "Past Tense",
+    rows: [
+      ["Simple Past", "I ate rice.", "Subject + V2"],
+      ["Past Continuous", "I was eating rice.", "Subject + was/were + V-ing"],
+      ["Past Perfect", "I had eaten rice.", "Subject + had + V3"],
+      ["Past Perfect Continuous", "I had been eating rice.", "Subject + had been + V-ing"]
+    ]
+  },
+  {
+    title: "Future Tense",
+    rows: [
+      ["Simple Future", "I will eat rice.", "Subject + will/shall + V1"],
+      ["Future Continuous", "I will be eating rice.", "Subject + will be + V-ing"],
+      ["Future Perfect", "I will have eaten rice.", "Subject + will have + V3"],
+      ["Future Perfect Continuous", "I will have been eating rice.", "Subject + will have been + V-ing"]
+    ]
+  }
+];
+
+const tensesListEl = document.getElementById('tensesList');
+tensesData.forEach(group => {
+  const div = document.createElement('div');
+  div.className = 'tense-group';
+  let rowsHtml = group.rows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('');
+  div.innerHTML = `
+    <h3>${group.title}</h3>
+    <table class="tense-table">
+      <tr><th>Type</th><th>Example</th><th>Formula</th></tr>
+      ${rowsHtml}
+    </table>
+  `;
+  tensesListEl.appendChild(div);
+});
+
+const tenseQuizLevels = [
+  // Level 1 - Easy
+  [
+    { q: "'I have eaten rice.' — which tense is this?", options: ["Simple Past", "Present Perfect", "Future Simple", "Past Continuous"], answer: 1 },
+    { q: "'I will eat rice.' — which tense is this?", options: ["Simple Future", "Simple Past", "Present Continuous", "Past Perfect"], answer: 0 },
+    { q: "'I eat rice every day.' — which tense?", options: ["Simple Present", "Simple Past", "Future Perfect", "Past Continuous"], answer: 0 },
+    { q: "'She ate rice yesterday.' — which tense?", options: ["Simple Past", "Simple Present", "Present Perfect", "Future Simple"], answer: 0 },
+    { q: "'They play cricket every weekend.' — which tense?", options: ["Simple Present", "Simple Past", "Present Continuous", "Simple Future"], answer: 0 },
+    { q: "'We will visit Lahore next month.' — which tense?", options: ["Simple Future", "Simple Past", "Present Perfect", "Past Continuous"], answer: 0 },
+    { q: "'He has finished his homework.' — which tense?", options: ["Present Perfect", "Simple Past", "Simple Future", "Past Continuous"], answer: 0 },
+    { q: "'I drink tea every morning.' — which tense?", options: ["Simple Present", "Present Continuous", "Simple Past", "Future Perfect"], answer: 0 }
+  ],
+  // Level 2 - Medium
+  [
+    { q: "Formula 'Subject + was/were + V-ing' is for:", options: ["Present Continuous", "Past Continuous", "Future Continuous", "Simple Past"], answer: 1 },
+    { q: "'She had gone home.' — which tense?", options: ["Past Perfect", "Present Perfect", "Simple Past", "Future Perfect"], answer: 0 },
+    { q: "'I am eating rice.' — which tense?", options: ["Present Continuous", "Present Perfect", "Simple Present", "Past Continuous"], answer: 0 },
+    { q: "'They were playing football.' — which tense?", options: ["Past Continuous", "Present Continuous", "Simple Past", "Future Continuous"], answer: 0 },
+    { q: "'He will be studying at 9pm.' — which tense?", options: ["Future Continuous", "Simple Future", "Present Continuous", "Future Perfect"], answer: 0 },
+    { q: "'We have been waiting for an hour.' — which tense?", options: ["Present Perfect Continuous", "Present Perfect", "Past Perfect", "Simple Present"], answer: 0 },
+    { q: "Formula 'Subject + have/has + V3' is for:", options: ["Present Perfect", "Simple Past", "Future Perfect", "Past Continuous"], answer: 0 },
+    { q: "'I was sleeping when you called.' — which tense?", options: ["Past Continuous", "Simple Past", "Past Perfect", "Present Continuous"], answer: 0 }
+  ],
+  // Level 3 - Hard
+  [
+    { q: "Which formula is correct for Simple Present?", options: ["Subject + V2", "Subject + will + V1", "Subject + V1 (+s/es)", "Subject + had + V3"], answer: 2 },
+    { q: "'I will have eaten rice by 9pm.' — which tense?", options: ["Future Perfect", "Future Continuous", "Simple Future", "Present Perfect"], answer: 0 },
+    { q: "'I had been eating rice when she came.' — which tense?", options: ["Past Perfect Continuous", "Present Perfect Continuous", "Past Continuous", "Future Perfect Continuous"], answer: 0 },
+    { q: "'She will have been working here for 5 years next month.' — which tense?", options: ["Future Perfect Continuous", "Future Perfect", "Future Continuous", "Present Perfect Continuous"], answer: 0 },
+    { q: "Formula 'Subject + had been + V-ing' is for:", options: ["Past Perfect Continuous", "Present Perfect Continuous", "Past Perfect", "Future Perfect Continuous"], answer: 0 },
+    { q: "'By next year, I will have completed my degree.' — which tense?", options: ["Future Perfect", "Future Continuous", "Simple Future", "Future Perfect Continuous"], answer: 0 },
+    { q: "Formula 'Subject + will have been + V-ing' is for:", options: ["Future Perfect Continuous", "Future Perfect", "Future Continuous", "Present Perfect Continuous"], answer: 0 },
+    { q: "'She has been studying since morning.' — which tense?", options: ["Present Perfect Continuous", "Present Perfect", "Present Continuous", "Past Perfect Continuous"], answer: 0 }
+  ]
+];
+
+/* ---------- LEVEL-BASED QUIZ ENGINE ---------- */
+function shuffleArray(arr) {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function pickRandomQuestions(pool, count) {
+  return shuffleArray(pool).slice(0, count);
+}
+
+function createLevelQuiz(containerId, levelPools, scoreId, questionsPerLevel = 3) {
+  const container = document.getElementById(containerId);
+  const state = {
+    currentLevel: 0,
+    totalCorrect: 0,
+    totalQuestions: levelPools.length * questionsPerLevel,
+    activeQuestions: [] // the randomly picked questions for the current level attempt
+  };
+
+  function renderLevel() {
+    container.innerHTML = '';
+    const levelNum = state.currentLevel + 1;
+    const pool = levelPools[state.currentLevel];
+    state.activeQuestions = pickRandomQuestions(pool, Math.min(questionsPerLevel, pool.length));
+
+    const levelHeader = document.createElement('div');
+    levelHeader.innerHTML = `<h3 style="color:#ff6a88; margin-bottom:10px;">🏁 Level ${levelNum} of ${levelPools.length}</h3>`;
+    container.appendChild(levelHeader);
+
+    state.activeQuestions.forEach((item, qIndex) => {
+      const qDiv = document.createElement('div');
+      qDiv.className = 'quiz-question';
+      qDiv.dataset.answer = item.answer;
+      qDiv.dataset.answered = "false";
+
+      let optionsHtml = item.options.map((opt, i) =>
+        `<button class="option-btn" data-index="${i}">${opt}</button>`
+      ).join('');
+
+      qDiv.innerHTML = `<p class="qtext">${qIndex + 1}. ${item.q}</p><div class="options">${optionsHtml}</div>`;
+      container.appendChild(qDiv);
+    });
+
+    container.querySelectorAll('.option-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const qDiv = btn.closest('.quiz-question');
+        if (qDiv.dataset.answered === "true") return;
+        qDiv.dataset.answered = "true";
+        qDiv.dataset.selected = btn.dataset.index;
+
+        const correctIndex = parseInt(qDiv.dataset.answer);
+        const allBtns = qDiv.querySelectorAll('.option-btn');
+        allBtns.forEach(b => {
+          if (parseInt(b.dataset.index) === correctIndex) {
+            b.classList.add('correct');
+          } else if (b === btn) {
+            b.classList.add('wrong');
+          }
+        });
+      });
+    });
+
+    const checkBtn = document.createElement('button');
+    checkBtn.className = 'check-btn';
+    checkBtn.textContent = levelNum === levelPools.length ? 'Finish Quiz ✅' : 'Next Level ➜';
+    checkBtn.addEventListener('click', () => finishLevel());
+    container.appendChild(checkBtn);
+
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'quiz-score';
+    msgDiv.id = containerId + '-levelMsg';
+    container.appendChild(msgDiv);
+  }
+
+  function finishLevel() {
+    const questions = container.querySelectorAll('.quiz-question');
+    let correctInLevel = 0;
+    let answeredAll = true;
+
+    questions.forEach(qDiv => {
+      if (qDiv.dataset.answered !== "true") {
+        answeredAll = false;
+        const correctIndex = parseInt(qDiv.dataset.answer);
+        qDiv.querySelectorAll('.option-btn')[correctIndex].classList.add('correct');
+      } else if (parseInt(qDiv.dataset.selected) === parseInt(qDiv.dataset.answer)) {
+        correctInLevel++;
+      }
+    });
+
+    const msgDiv = document.getElementById(containerId + '-levelMsg');
+
+    if (!answeredAll) {
+      msgDiv.textContent = "⚠️ Please answer all questions first!";
+      return;
+    }
+
+    state.totalCorrect += correctInLevel;
+    const passed = correctInLevel >= Math.ceil(state.activeQuestions.length * 0.6);
+
+    if (state.currentLevel + 1 < levelPools.length) {
+      if (passed) {
+        msgDiv.textContent = `✅ Level ${state.currentLevel + 1} passed! Score: ${correctInLevel}/${state.activeQuestions.length}. Starting next level...`;
+        state.currentLevel++;
+        setTimeout(renderLevel, 1400);
+      } else {
+        msgDiv.textContent = `❌ You got ${correctInLevel}/${state.activeQuestions.length} correct in this level. Review and try again!`;
+        const retryBtn = document.createElement('button');
+        retryBtn.className = 'check-btn';
+        retryBtn.textContent = 'Retry Level 🔁';
+        retryBtn.addEventListener('click', () => {
+          state.totalCorrect -= correctInLevel;
+          renderLevel();
+        });
+        container.appendChild(retryBtn);
+      }
+    } else {
+      // last level done
+      const scoreEl = document.getElementById(scoreId);
+      const percent = Math.round((state.totalCorrect / state.totalQuestions) * 100);
+      container.innerHTML = `<h3 style="color:#43cea2; text-align:center;">🎉 Quiz Complete!</h3>`;
+      scoreEl.innerHTML = `🏆 Final Score: ${state.totalCorrect} / ${state.totalQuestions} (${percent}%)`;
+      const retryAllBtn = document.createElement('button');
+      retryAllBtn.className = 'check-btn';
+      retryAllBtn.textContent = 'Play Again 🔄';
+      retryAllBtn.addEventListener('click', () => {
+        state.currentLevel = 0;
+        state.totalCorrect = 0;
+        scoreEl.innerHTML = '';
+        renderLevel();
+      });
+      container.appendChild(retryAllBtn);
+    }
+  }
+
+  renderLevel();
+}
+
+createLevelQuiz('posQuiz', posQuizLevels, 'posScore');
+createLevelQuiz('tenseQuiz', tenseQuizLevels, 'tenseScore');
+</script>
+
+</body>
+</html>
